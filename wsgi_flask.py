@@ -7,4 +7,4 @@ import bt_flask
 app = DispatcherMiddleware(bt_flask.app)
 
 if __name__ == "__main__":
-    run_simple('localhost', 3345, app, use_reloader=True, use_debugger=True, use_evalex=True)
+    run_simple('localhost', 3346, app, use_reloader=True, use_debugger=True, use_evalex=True)

@@ -16,7 +16,7 @@ print("PROJECT_ROOT: {}".format(PROJECT_ROOT))
 BT_JAR_PATH = os.environ.get('BT_JAR_PATH', "")
 print("BT_JAR_PATH: {}".format(BT_JAR_PATH))
 
-JAVA_PATH = os.environ.get('JAVA_PATH')  # isn't there an env for this already?
+# JAVA_PATH = os.environ.get('JAVA_PATH')  # isn't there an env for this already?
 
 
 
@@ -100,8 +100,15 @@ class BTCLI:
 		"""
 		# try:
 		start = time.time()
-		predictions_full_path = "temp/" + self.generate_filename() + ".csv"  # generates unique filename
+		# predictions_full_path = "temp/" + self.generate_filename() + ".csv"  # generates unique filename
+		predictions_full_path = os.path.join(PROJECT_ROOT, "temp", self.generate_filename() + ".csv")  # generates unique filename
+
+		print("Predictions CSV path: {}".format(predictions_full_path))
+
 		self.execute_bt(smiles, gen_limit, predictions_full_path)  # runs opera cli
+
+		print("Finished executing biotransformer CLI.")
+
 		predictions_data = self.get_predictions(predictions_full_path)  # gets predictions from .csv
 		self.remove_temp_files(predictions_full_path)
 		end = time.time()
