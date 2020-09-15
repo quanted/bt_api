@@ -36,9 +36,13 @@ def run_bt():
 	Runs bt_cli.py module for biotransformation predictions.
 	"""
 	post_dict = request.get_json()
-	requested_smiles = post_dict['smiles']
-	bt_results = BTCLI().run_bt_routine(requested_smiles)  # bt_cli expecting list of smiles
-	return jsonify({"status": True, "data": bt_results})
+	logging.warning("INCOMING REQUEST: {}".format(post_dict))
+	smiles = post_dict["smiles"]
+	react_lib = post_dict["prop"]
+	gen_limit = post_dict["gen_limit"]
+	bt_results = BTCLI().run_bt_routine(smiles, react_lib, gen_limit)  # bt_cli expecting list of smiles
+	# return jsonify({"status": True, "data": bt_results})
+	return {"status": True, "data": bt_results}
 
-if __name__ == '__main__':
-	app.run(debug=True)
+if __name__ == "__main__":
+	app.run(debug=True, port=5002)
