@@ -99,11 +99,16 @@ class BTCLI:
 		return content
 
 	def get_predictions(self, parent_smiles, predictions_filename):
+		init_tree = Product(id="", children=[], data={'smiles': parent_smiles}, name=None).__dict__
+		if not os.path.isfile(predictions_filename):
+			return {
+				"tree": init_tree,
+				"total_products": 0
+			}
 		tree_builder = Tree()
 		with open(predictions_filename) as csv_file:
 			csv_dict = csv.DictReader(csv_file)
 			csv_data = tree_builder.parse_csv_results(csv_dict)
-		init_tree = Product(id="", children=[], data={'smiles': parent_smiles}, name=None).__dict__
 		return {
 			"tree": tree_builder.traverse(csv_data, init_tree),
 			"total_products": len(csv_data)
