@@ -64,7 +64,8 @@ class Tree:
 
 		trav_index = 0
 		for node in orig_tree:
-			if node['parent'] == new_tree['id']:
+			if node['parent'] == new_tree['id'] and node['id'] != "":
+				# NOTE: the "" condition is removing any products within tree that are same as parent.
 				new_tree['children'].append(Product(
 					id=node['id'],
 					children=[],
