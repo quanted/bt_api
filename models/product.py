@@ -2,8 +2,9 @@ class Product:
 	"""
 	A product/node in the tree.
 	"""
-	def __init__(self, id, name, data, children):
+	def __init__(self, id, parent_id, name, data, children):
 		self.id = id  # NOTE: python uses "id" as well
+		self.parent_id = parent_id
 		self.name = name or "<img class='blank_node' src='/static_qed/cts/images/loader_node.gif' />"
 		self.data = ProductData(
 			smiles=data['smiles'],

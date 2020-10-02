@@ -40,7 +40,7 @@ def run_bt():
 	react_lib = post_dict["prop"]
 	gen_limit = post_dict["gen_limit"]
 	bt_results = BTCLI().run_bt_routine(smiles, react_lib, gen_limit)  # bt_cli expecting list of smiles
-	return {"status": True, "data": bt_results}
+	return jsonify({"status": True, "data": bt_results})
 
 if __name__ == "__main__":
 	app.run(debug=True, port=5002)

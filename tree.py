@@ -32,6 +32,9 @@ class Tree:
 			"Precursor Major Isotope Mass"
 		]  # v1.1.5 keys
 
+		self.trav_index = 0  # tracks tree traversal
+		self.num_products = 0  # number of products in tree
+
 	def _get_metabolite_id(self):
 		"""
 		Gets ID number from biotransformer CSV's "Metabolite ID" key.
@@ -46,55 +49,34 @@ class Tree:
 		new_csv_data = [] 
 		metID = 1  # use unique id like this, or just use the product's metabolite id (duplicate ids for same products)
 		for row in csv_data:
-			# row = dict(row)
-			new_csv_data.append({
-				"id": row["Metabolite ID"],
-				"parent": row["Precursor ID"],
-				"data": {
+			new_csv_data.append(Product(
+				id = str(metID),  # NOTE: may need unique id
+				parent_id = row["Precursor ID"].split("0")[-1],
+				data = {
 					"smiles": row["SMILES"],
 					"routes": row["Reaction"]
-				}
-			})
+				},
+				name = None,
+				children = []
+			).__dict__)
 			metID += 1
 		return new_csv_data
 
-	def traverse(self, orig_tree, new_tree):
-
-		# NOTE: genKey gets added on the frontend, cts_gentrans_tree.html
-
-		trav_index = 0
-		for node in orig_tree:
-			if node['parent'] == new_tree['id'] and node['id'] != "":
-				# NOTE: the "" condition is removing any products within tree that are same as parent.
-				new_tree['children'].append(Product(
-					id=node['id'],
-					children=[],
-					data=node['data'],
-					name=None
-				).__dict__)
-				trav_index += 1
-			else:
-				new_parent = node['parent']
-				child_index = 0
-				for _node in new_tree['children']:
-					if _node['id'] == new_parent:
-						new_tree['children'][child_index] = Product(
-							id=_node['id'],
-							children=[],
-							data=node['data'],
-							name=None
-						).__dict__
-						new_tree_2 = new_tree['children'][child_index]
-						orig_tree_2 = orig_tree[trav_index:]
-						self.traverse(orig_tree_2, new_tree_2)
-					child_index += 1
-		return new_tree
+	def traverse(self, parent_smiles, products_list):
+		root = Product(id="", parent_id=None, children=[], data={'smiles': parent_smiles}, name=None).__dict__
+		node_list = {'': root}
+		for i in range(0, len(products_list)):
+			node_list[products_list[i]['id']] = products_list[i]
+			parent_index = products_list[i]['parent_id']
+			child_index = node_list[products_list[i]['id']]
+			node_list[parent_index]['children'].append(child_index)
+		return root
 
 
 
 if __name__ == "__main__":
 
-	csv_file = open("results3.csv")
+	csv_file = open("models/results3.csv")
 	csv_dict = csv.DictReader(csv_file)
 	print("\nRaw CSV data: {}\n".format(csv_dict))
 	
