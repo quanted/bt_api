@@ -47,8 +47,16 @@ class Tree:
 		data to be converted to a tree structure.
 		"""
 		new_csv_data = [] 
+		metabolite_id_list = []
 		metID = 1  # use unique id like this, or just use the product's metabolite id (duplicate ids for same products)
 		for row in csv_data:
+
+			product_parent_id = row["Metabolite ID"] + "-" + row["Precursor ID"]
+
+			if product_parent_id in metabolite_id_list:
+				print("product_parent_id already exists, skipping: {}".format(product_parent_id))
+				continue
+
 			new_csv_data.append(Product(
 				id = str(metID),  # NOTE: may need unique id
 				parent_id = row["Precursor ID"].split("0")[-1],
@@ -59,7 +67,12 @@ class Tree:
 				name = None,
 				children = []
 			).__dict__)
+
+			# Only add product if it's (Medtabolite ID) doesn't already exist with the same parent (Precursor ID)
+			metabolite_id_list.append(row["Metabolite ID"] + "-" + row["Precursor ID"])
+
 			metID += 1
+
 		return new_csv_data
 
 	def traverse(self, parent_smiles, products_list):
