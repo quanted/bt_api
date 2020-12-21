@@ -8,5 +8,6 @@ services:
       context: .
       dockerfile: Dockerfile
     image: quanted/bt_api
+    container_name: biotransformer
     ports:
       - "5002:5002"
