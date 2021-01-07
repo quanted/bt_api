@@ -4,6 +4,7 @@ services:
 
   # Biotransformer Webservices
   biotransformer:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile
