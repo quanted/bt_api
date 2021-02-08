@@ -12,3 +12,5 @@ services:
     container_name: biotransformer
     ports:
       - "5002:5002"
+    volumes:
+      - ./:/src

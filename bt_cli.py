@@ -103,7 +103,8 @@ class BTCLI:
 		if not os.path.isfile(predictions_filename):
 			return {
 				"tree": init_tree,
-				"total_products": 0
+				"total_products": 0,
+				"unique_products": 0
 			}
 		tree_builder = Tree()
 		with open(predictions_filename) as csv_file:
@@ -112,9 +113,11 @@ class BTCLI:
 		# return csv_data
 
 		tree_builder.num_products = len(csv_data)
+		tree, unique_products = tree_builder.traverse(parent_smiles, csv_data)
 		return {
-			"tree": tree_builder.traverse(parent_smiles, csv_data),
-			"total_products": len(csv_data)
+			"tree": tree,
+			"total_products": len(csv_data),
+			"unique_products": len(unique_products)
 		}
 
 	def run_bt_routine(self, smiles, pred_type="ecbased", gen_limit=1):

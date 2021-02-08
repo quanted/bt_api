@@ -1,4 +1,5 @@
 import csv
+import logging
 from models.product import Product
 
 
@@ -34,6 +35,7 @@ class Tree:
 
 		self.trav_index = 0  # tracks tree traversal
 		self.num_products = 0  # number of products in tree
+		self.unique_products = []
 
 	def _get_metabolite_id(self):
 		"""
@@ -78,12 +80,15 @@ class Tree:
 	def traverse(self, parent_smiles, products_list):
 		root = Product(id="", parent_id=None, children=[], data={'smiles': parent_smiles}, name=None).__dict__
 		node_list = {'': root}
+		unique_products = []
 		for i in range(0, len(products_list)):
+			if not products_list[i]['data']['smiles'] in unique_products:
+				unique_products.append(products_list[i]['data']['smiles'])
 			node_list[products_list[i]['id']] = products_list[i]
 			parent_index = products_list[i]['parent_id']
 			child_index = node_list[products_list[i]['id']]
 			node_list[parent_index]['children'].append(child_index)
-		return root
+		return root, unique_products
 
 
 

@@ -39,8 +39,12 @@ def run_bt():
 	smiles = post_dict["smiles"]
 	react_lib = post_dict["prop"]
 	gen_limit = post_dict["gen_limit"]
-	bt_results = BTCLI().run_bt_routine(smiles, react_lib, gen_limit)  # bt_cli expecting list of smiles
-	return jsonify({"status": True, "data": bt_results})
+	try:
+		bt_results = BTCLI().run_bt_routine(smiles, react_lib, gen_limit)  # bt_cli expecting list of smiles
+		return jsonify({"status": True, "data": bt_results})
+	except Exception as e:
+		logging.warning("biotransformer exception: {}".format(e))
+		return jsonify({"status": False, "data": {"error": "error generating products"}})
 
 if __name__ == "__main__":
 	app.run(debug=True, port=5002)
