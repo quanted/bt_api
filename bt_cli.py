@@ -56,6 +56,18 @@ class BTCLI:
 			"--nsteps", str(gen_limit)
 		], cwd=BT_JAR_PATH)
 
+	def execute_bt3(self, smiles, pred_type, gen_limit, predictions_filename):
+		"""
+		Executes biotransformer jar file for predictions.
+		"""
+		subprocess.run(["java", "-jar", "BioTransformer3.0.jar",
+			"--task", "pred",
+			"--btType", pred_type,
+			"--ismiles", smiles,
+			"--csvoutput", predictions_filename,
+			"--nsteps", str(gen_limit)
+		], cwd=BT_JAR_PATH)
+
 	def build_endpoint_args(self):
 		"""
 		Creates string of endpoint args (pchem properties) to predict.
@@ -128,7 +140,8 @@ class BTCLI:
 		try:
 			predictions_full_path = os.path.join(PROJECT_ROOT, "temp", self.generate_filename() + ".csv")  # generates unique filename
 			# print("Predictions CSV path: {}".format(predictions_full_path))
-			self.execute_bt(smiles, pred_type, gen_limit, predictions_full_path)  # runs opera cli
+			# self.execute_bt(smiles, pred_type, gen_limit, predictions_full_path)  # runs opera cli
+			self.execute_bt3(smiles, pred_type, gen_limit, predictions_full_path)  # runs opera cli
 			# print("Finished executing biotransformer CLI.")
 			predictions_data = self.get_predictions(smiles, predictions_full_path)  # gets predictions from .csv
 			self.remove_all_temp_files()
