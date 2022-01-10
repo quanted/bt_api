@@ -9,11 +9,17 @@ import os
 import uuid
 import glob
 import time
+import csv
+
+# Local imports:
+from models.product import Product
+from tree import Tree
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 print("PROJECT_ROOT: {}".format(PROJECT_ROOT))
 
-BT_JAR_PATH = os.environ.get('BT_JAR_PATH', "")
+# BT_JAR_PATH = os.environ.get('BT_JAR_PATH', os.path.join(PROJECT_ROOT, "biotransformerjar", "biotransformer-1-0-9.jar"))
+BT_JAR_PATH = os.environ.get('BT_JAR_PATH', os.path.join(PROJECT_ROOT, "biotransformerjar"))
 print("BT_JAR_PATH: {}".format(BT_JAR_PATH))
 
 # JAVA_PATH = os.environ.get('JAVA_PATH')  # isn't there an env for this already?
@@ -38,17 +44,29 @@ class BTCLI:
 		# CLI Example(s):
 		self.cli_example_1 = "java -jar biotransformer-1-0-8.jar --task pred --btType cyp450 --ismiles CCCO --csvoutput results.csv --nsteps 3"
 
-	def execute_bt(self, smiles, gen_limit, predictions_filename):
+	def execute_bt(self, smiles, pred_type, gen_limit, predictions_filename):
 		"""
 		Executes biotransformer jar file for predictions.
 		"""
-		subprocess.run(["java", "-jar", BT_JAR_PATH,
+		subprocess.run(["java", "-jar", "biotransformer-1.1.5.jar",
 			"--task", "pred",
-			"--btType", self.bt_options[0],
+			"--btType", pred_type,
 			"--ismiles", smiles,
 			"--csvoutput", predictions_filename,
 			"--nsteps", str(gen_limit)
-		])
+		], cwd=BT_JAR_PATH)
+
+	def execute_bt3(self, smiles, pred_type, gen_limit, predictions_filename):
+		"""
+		Executes biotransformer jar file for predictions.
+		"""
+		subprocess.run(["java", "-jar", "BioTransformer3.0.jar",
+			"--task", "pred",
+			"--btType", pred_type,
+			"--ismiles", smiles,
+			"--csvoutput", predictions_filename,
+			"--nsteps", str(gen_limit)
+		], cwd=BT_JAR_PATH)
 
 	def build_endpoint_args(self):
 		"""
@@ -82,45 +100,61 @@ class BTCLI:
 		for file in glob.glob("temp/*"):
 			os.remove(file)
 
-	def get_predictions(self, predictions_filename):
+	def get_predictions_orig(self, predictions_filename):
 		"""
 		Reads result CSV and returns predictions.
 		TODO: Parse output to make sense for CTS.
 		"""
 		tempfile_obj = open(predictions_filename)
-		csv_file = csv.DictReader(prediction_file)
-		csv_data = []
-		for row_dict in csv_file:
-			csv_data.append(dict(row_dict))  # row per smiles
-		return csv_data
+		content = tempfile_obj.read()
+		tempfile_obj.close()
+		return content
+
+	def get_predictions(self, parent_smiles, predictions_filename):
+		init_tree = Product(id="", parent_id=None, children=[], data={'smiles': parent_smiles}, name=None).__dict__
+		if not os.path.isfile(predictions_filename):
+			return {
+				"tree": init_tree,
+				"total_products": 0,
+				"unique_products": 0
+			}
+		tree_builder = Tree()
+		with open(predictions_filename) as csv_file:
+			csv_dict = csv.DictReader(csv_file)
+			csv_data = tree_builder.parse_csv_results(csv_dict)
+		# return csv_data
+
+		tree_builder.num_products = len(csv_data)
+		tree, unique_products = tree_builder.traverse(parent_smiles, csv_data)
+		return {
+			"tree": tree,
+			"total_products": len(csv_data),
+			"unique_products": len(unique_products)
+		}
 
 	def run_bt_routine(self, smiles, pred_type="ecbased", gen_limit=1):
 		"""
 		Runs full biotransformer CLI routine.
 		"""
-		# try:
 		start = time.time()
-		# predictions_full_path = "temp/" + self.generate_filename() + ".csv"  # generates unique filename
-		predictions_full_path = os.path.join(PROJECT_ROOT, "temp", self.generate_filename() + ".csv")  # generates unique filename
-
-		print("Predictions CSV path: {}".format(predictions_full_path))
-
-		self.execute_bt(smiles, gen_limit, predictions_full_path)  # runs opera cli
-
-		print("Finished executing biotransformer CLI.")
-
-		predictions_data = self.get_predictions(predictions_full_path)  # gets predictions from .csv
-		self.remove_temp_files(predictions_full_path)
+		try:
+			predictions_full_path = os.path.join(PROJECT_ROOT, "temp", self.generate_filename() + ".csv")  # generates unique filename
+			# print("Predictions CSV path: {}".format(predictions_full_path))
+			# self.execute_bt(smiles, pred_type, gen_limit, predictions_full_path)  # runs opera cli
+			self.execute_bt3(smiles, pred_type, gen_limit, predictions_full_path)  # runs opera cli
+			# print("Finished executing biotransformer CLI.")
+			predictions_data = self.get_predictions(smiles, predictions_full_path)  # gets predictions from .csv
+			self.remove_all_temp_files()
+			# print("Results: {}".format(predictions_data))
+		except Exception as e:
+			logging.warning("Exception running biotransformer: {}".format(e))
+			return {"error": "Error getting data from biotransformer."}
 		end = time.time()
 		print("Execution time (s): {}".format(end - start))
-		# return predictions_data
-		print("Results: {}".format(predictions_data))
-		# except Exception as e:
-		# 	logging.warning("Exception running biotransformer: {}".format(e))
-		# 	pass
+		return predictions_data
 
 
 
 if __name__ == '__main__':
 	bt_cli = BTCLI()
-	bt_cli.run_bt_routine("CCCO", "ecbased", 1)
+	bt_cli.run_bt_routine("CC(=O)OC1=C(C=CC=C1)C(O)=O", "ecbased", 2)

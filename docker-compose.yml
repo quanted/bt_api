@@ -1,0 +1,18 @@
+version: '3.1'
+
+services:
+
+  # Biotransformer Webservices
+  biotransformer:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: quanted/bt_api
+    container_name: biotransformer
+    ports:
+      - "5002:5002"
+    volumes:
+      - ./:/src
+    environment:
+      - BT_JAR_PATH=/src/biotransformer3.0jar
