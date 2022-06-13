@@ -8,8 +8,8 @@ COPY --from=python:3.8-slim / /
 COPY requirements.txt /tmp/
 RUN pip install --requirement /tmp/requirements.txt
 
-RUN apt-get update && \
-	apt-get upgrade
+RUN apt-get update -y && \
+	apt-get upgrade -y
 
 # Copy the project code
 COPY . /src/
