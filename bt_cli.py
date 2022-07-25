@@ -22,6 +22,8 @@ print("PROJECT_ROOT: {}".format(PROJECT_ROOT))
 BT_JAR_PATH = os.environ.get('BT_JAR_PATH', os.path.join(PROJECT_ROOT, "biotransformerjar"))
 print("BT_JAR_PATH: {}".format(BT_JAR_PATH))
 
+BT_JAR_NAME = os.environ.get("BT_JAR_NAME", "BioTransformer3.0_20220504.jar")
+
 # JAVA_PATH = os.environ.get('JAVA_PATH')  # isn't there an env for this already?
 
 
@@ -60,7 +62,7 @@ class BTCLI:
 		"""
 		Executes biotransformer jar file for predictions.
 		"""
-		subprocess.run(["java", "-jar", "BioTransformer3.0.jar",
+		subprocess.run(["java", "-jar", BT_JAR_NAME,
 			"--task", "pred",
 			"--btType", pred_type,
 			"--ismiles", smiles,
