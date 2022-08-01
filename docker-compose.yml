@@ -8,11 +8,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: quanted/bt_api
-    container_name: biotransformer
+    # image: quanted/bt_api
+    image: ghcr.io/quanted/cts-biotransformer:dev
+    container_name: cts-biotransformer
     ports:
       - "5002:5002"
-    volumes:
-      - ./:/src
+    # volumes:
+    #   - ./:/src
     environment:
       - BT_JAR_PATH=/src/biotransformer3.0jar
