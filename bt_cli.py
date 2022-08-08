@@ -67,7 +67,8 @@ class BTCLI:
 			"--btType", pred_type,
 			"--ismiles", smiles,
 			"--csvoutput", predictions_filename,
-			"--nsteps", str(gen_limit)
+			"--nsteps", str(gen_limit),
+			"-useDB", "false"
 		], cwd=BT_JAR_PATH)
 
 	def build_endpoint_args(self):
