@@ -5,7 +5,7 @@ class Product:
 	def __init__(self, id, parent_id, name, data, children):
 		self.id = id  # NOTE: python uses "id" as well
 		self.parent_id = parent_id
-		self.name = name or "<img class='blank_node' src='/static_qed/cts_app/images/loader_node.gif' />"
+		self.name = name or "<img class='blank_node' src='/cts/static/cts_app/images/loader_node.gif' />"
 		self.data = ProductData(
 			smiles=data['smiles'],
 			routes=data.get('routes'),
