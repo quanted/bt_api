@@ -2,7 +2,9 @@ FROM openjdk:slim
 
 ENV APP_USER=www-data
 
-COPY --from=python:3.8-slim / /
+# COPY --from=python:3.8-slim / /
+
+FROM python:3.8-slim
 
 # Install requirements for bt_api
 COPY requirements.txt /tmp/
