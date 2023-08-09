@@ -46,17 +46,17 @@ class BTCLI:
 		# CLI Example(s):
 		self.cli_example_1 = "java -jar biotransformer-1-0-8.jar --task pred --btType cyp450 --ismiles CCCO --csvoutput results.csv --nsteps 3"
 
-	def execute_bt(self, smiles, pred_type, gen_limit, predictions_filename):
-		"""
-		Executes biotransformer jar file for predictions.
-		"""
-		subprocess.run(["java", "-jar", "biotransformer-1.1.5.jar",
-			"--task", "pred",
-			"--btType", pred_type,
-			"--ismiles", smiles,
-			"--csvoutput", predictions_filename,
-			"--nsteps", str(gen_limit)
-		], cwd=BT_JAR_PATH)
+	# def execute_bt(self, smiles, pred_type, gen_limit, predictions_filename):
+	# 	"""
+	# 	Executes biotransformer jar file for predictions.
+	# 	"""
+	# 	subprocess.run(["java", "-jar", "biotransformer-1.1.5.jar",
+	# 		"--task", "pred",
+	# 		"--btType", pred_type,
+	# 		"--ismiles", smiles,
+	# 		"--csvoutput", predictions_filename,
+	# 		"--nsteps", str(gen_limit)
+	# 	], cwd=BT_JAR_PATH)
 
 	def execute_bt3(self, smiles, pred_type, gen_limit, predictions_filename):
 		"""
@@ -67,7 +67,8 @@ class BTCLI:
 			"--btType", pred_type,
 			"--ismiles", smiles,
 			"--csvoutput", predictions_filename,
-			"--nsteps", str(gen_limit)
+			"--nsteps", str(gen_limit),
+			"-useDB", "false"
 		], cwd=BT_JAR_PATH)
 
 	def build_endpoint_args(self):
