@@ -4,7 +4,10 @@ ENV APP_USER=www-data
 
 # COPY --from=python:3.8-slim / /
 
-FROM python:3.8-slim
+RUN apt-get update && \
+	apt-get install -y \
+		python3 \
+		python3-pip
 
 # Install requirements for bt_api
 COPY requirements.txt /tmp/

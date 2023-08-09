@@ -8,8 +8,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # image: quanted/bt_api
-    image: ghcr.io/quanted/cts-biotransformer:dev
+    image: ghcr.io/quanted/cts-biotransformer:dev-kube
     container_name: cts-biotransformer
     ports:
       - "5002:5002"
