@@ -22,7 +22,7 @@ print("PROJECT_ROOT: {}".format(PROJECT_ROOT))
 BT_JAR_PATH = os.environ.get('BT_JAR_PATH', os.path.join(PROJECT_ROOT, "biotransformerjar"))
 print("BT_JAR_PATH: {}".format(BT_JAR_PATH))
 
-BT_JAR_NAME = os.environ.get("BT_JAR_NAME", "BioTransformer3.0_20220504.jar")
+BT_JAR_NAME = os.environ.get("BT_JAR_NAME", "BioTransformer3.0_20230525.jar")
 
 # JAVA_PATH = os.environ.get('JAVA_PATH')  # isn't there an env for this already?
 

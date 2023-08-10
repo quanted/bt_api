@@ -16,4 +16,4 @@ services:
     #   - ./:/src
     environment:
       - BT_JAR_PATH=/src/biotransformer3.0jar
-      - BT_JAR_NAME=BioTransformer3.0_20220615.jar
+      - BT_JAR_NAME=BioTransformer3.0_20230525.jar
