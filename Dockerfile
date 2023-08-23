@@ -1,13 +1,11 @@
-FROM openjdk:slim
+# FROM openjdk:slim
+# FROM ubuntu/jre:8-22.04_3
+FROM openjdk:22-slim
 
 ENV APP_USER=www-data
 
 # COPY --from=python:3.8-slim / /
-
-RUN apt-get update && \
-	apt-get install -y \
-		python3 \
-		python3-pip
+COPY --from=python:3.11.4-slim / /
 
 # Install requirements for bt_api
 COPY requirements.txt /tmp/
