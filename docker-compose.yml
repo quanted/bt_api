@@ -4,10 +4,10 @@ services:
 
   # Biotransformer Webservices
   cts-biotransformer:
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # restart: unless-stopped
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     image: ghcr.io/quanted/cts-biotransformer:dev-kube
     container_name: cts-biotransformer
     ports:
