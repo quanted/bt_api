@@ -62,13 +62,23 @@ class BTCLI:
 		"""
 		Executes biotransformer jar file for predictions.
 		"""
+
+		logging.warning("Using the following jar: {}".format(BT_JAR_NAME))
+
+		# subprocess.run(["java", "-jar", BT_JAR_NAME,
+		# 	"--task", "pred",
+		# 	"--btType", pred_type,
+		# 	"--ismiles", smiles,
+		# 	"--csvoutput", predictions_filename,
+		# 	"--nsteps", str(gen_limit),
+		# 	"-useDB", "false"
+		# ], cwd=BT_JAR_PATH)
 		subprocess.run(["java", "-jar", BT_JAR_NAME,
 			"--task", "pred",
 			"--btType", pred_type,
 			"--ismiles", smiles,
 			"--csvoutput", predictions_filename,
-			"--nsteps", str(gen_limit),
-			"-useDB", "false"
+			"--nsteps", str(gen_limit)
 		], cwd=BT_JAR_PATH)
 
 	def build_endpoint_args(self):
