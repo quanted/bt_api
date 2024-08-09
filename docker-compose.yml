@@ -5,9 +5,9 @@ services:
   # Biotransformer Webservices
   cts-biotransformer:
     restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     image: ghcr.io/quanted/cts-biotransformer:dev-kube
     container_name: cts-biotransformer
     ports:
@@ -15,5 +15,5 @@ services:
     # volumes:
     #   - ./:/src
     environment:
-      - BT_JAR_PATH=/src/biotransformer3.0jar
+      - BT_JAR_PATH=/src/biotransformerjar
       - BT_JAR_NAME=biotransformer.jar  # name of .jar in biotransformer3.0jar/
